@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 @Entity
@@ -42,6 +43,17 @@ public class AppointmentEntity {
     @Column(name = "doctor_notes")
     private String doctorNotes;
 
+
+    @OneToMany(mappedBy = "appointment", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PrescriptionEntity> prescriptionEntities;
+
+    public List<PrescriptionEntity> getPrescriptionEntities() {
+        return prescriptionEntities;
+    }
+
+    public void setPrescriptionEntities(List<PrescriptionEntity> prescriptionEntities) {
+        this.prescriptionEntities = prescriptionEntities;
+    }
 
     public Integer getAppointmentId() {
         return appointmentId;

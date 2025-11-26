@@ -127,6 +127,49 @@ public class UserEntity {
     )
     private List<UserExerciseSessionEntity> userExerciseSessionEntities = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user", // "user" là tên thuộc tính (field) trong Appointment.java
+            cascade = CascadeType.ALL, // Tùy chọn: Xóa user thì xóa luôn cuộc hẹn
+            orphanRemoval = true // Tùy chọn: Xóa cuộc hẹn khỏi list thì xóa luôn trong DB
+    )
+    private List<MedicationScheduleEntity> medicationScheduleEntities = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", // "user" là tên thuộc tính (field) trong Appointment.java
+            cascade = CascadeType.ALL, // Tùy chọn: Xóa user thì xóa luôn cuộc hẹn
+            orphanRemoval = true // Tùy chọn: Xóa cuộc hẹn khỏi list thì xóa luôn trong DB
+    )
+    private List<PrescriptionEntity> prescriptionEntities = new ArrayList<>();
+
+
+    @OneToMany(mappedBy = "user", // "user" là tên thuộc tính (field) trong Appointment.java
+            cascade = CascadeType.ALL, // Tùy chọn: Xóa user thì xóa luôn cuộc hẹn
+            orphanRemoval = true // Tùy chọn: Xóa cuộc hẹn khỏi list thì xóa luôn trong DB
+    )
+    private List<AIChatEntity> aiChatEntities = new ArrayList<>();
+
+    public List<AIChatEntity> getAiChatEntities() {
+        return aiChatEntities;
+    }
+
+    public void setAiChatEntities(List<AIChatEntity> aiChatEntities) {
+        this.aiChatEntities = aiChatEntities;
+    }
+
+    public List<PrescriptionEntity> getPrescriptionEntities() {
+        return prescriptionEntities;
+    }
+
+    public void setPrescriptionEntities(List<PrescriptionEntity> prescriptionEntities) {
+        this.prescriptionEntities = prescriptionEntities;
+    }
+
+    public List<MedicationScheduleEntity> getMedicationScheduleEntities() {
+        return medicationScheduleEntities;
+    }
+
+    public void setMedicationScheduleEntities(List<MedicationScheduleEntity> medicationScheduleEntities) {
+        this.medicationScheduleEntities = medicationScheduleEntities;
+    }
+
     public List<UserExerciseSessionEntity> getUserExerciseSessionEntities() {
         return userExerciseSessionEntities;
     }

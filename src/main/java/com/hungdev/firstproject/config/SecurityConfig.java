@@ -46,6 +46,12 @@ public class SecurityConfig {
 
                         .requestMatchers("/api/userexercises/**").permitAll()
 
+                        .requestMatchers("/api/appointments/**").permitAll()
+
+                        .requestMatchers("/api/prescriptions/**").permitAll()
+
+                        .requestMatchers("/api/ai-chat/**").permitAll()
+
                         .requestMatchers("/ws/**", "/ws-raw/**", "/app/**", "/topic/**", "/queue/**").permitAll()
 
                         // Tất cả các request khác đều cần xác thực

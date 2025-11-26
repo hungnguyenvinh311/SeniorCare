@@ -71,6 +71,22 @@ public class DoctorEntity {
     )
     private List<NotificationEntity> notificationEntities = new ArrayList<>();
 
+    @OneToMany(
+            mappedBy = "doctor", // "doctor" là tên thuộc tính (field) trong Appointment.java
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<PrescriptionEntity> prescriptionEntities = new ArrayList<>();
+
+
+    public List<PrescriptionEntity> getPrescriptionEntities() {
+        return prescriptionEntities;
+    }
+
+    public void setPrescriptionEntities(List<PrescriptionEntity> prescriptionEntities) {
+        this.prescriptionEntities = prescriptionEntities;
+    }
+
     public List<NotificationEntity> getNotificationEntities() {
         return notificationEntities;
     }

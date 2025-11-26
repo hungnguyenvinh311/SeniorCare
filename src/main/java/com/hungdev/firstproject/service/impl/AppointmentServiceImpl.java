@@ -58,7 +58,8 @@ public class AppointmentServiceImpl implements AppointmentService {
         appointment.setDoctor(doctor);
         appointment.setAppointmentTime(dto.getAppointmentTime());
         appointment.setUserSymptoms(dto.getUserSymptoms());
-        appointment.setStatus(String.valueOf(AppointmentStatus.PENDING)); // Trạng thái chờ
+        appointment.setStatus(String.valueOf(AppointmentStatus.PENDING));
+        appointment.setDoctorNotes(dto.getDoctorNotes());
 
         // 3. Lưu lịch hẹn vào DB
         AppointmentEntity savedAppointment = appointmentRepository.save(appointment);
@@ -75,6 +76,10 @@ public class AppointmentServiceImpl implements AppointmentService {
         notificationDTO.setUserId(patient.getUserId());
         notificationDTO.setMessage(message);
         notificationDTO.setRead(false);
+        notificationDTO.setRecipientType("DOCTOR");
+
+        notificationService.createDoctorNotification(notificationDTO);
+
 
 
         String messageForPatient = "Bạn đã đặt lịch với bác sĩ " + doctor.getFullName()
@@ -84,10 +89,14 @@ public class AppointmentServiceImpl implements AppointmentService {
         NotificationDTO notificationForPatient = new NotificationDTO();
 
         notificationForPatient.setUserId(patient.getUserId());
-        notificationForPatient.setMessage(message);
+        notificationForPatient.setMessage(messageForPatient);
         notificationForPatient.setRead(false);
+        notificationForPatient.setRecipientType("PATIENT");
 
-        notificationService.createDoctorNotification(notificationDTO);
+        notificationService.createUserNotification(notificationForPatient);
+
+
+
     }
 
     @Override
@@ -107,6 +116,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         notificationDTO.setDoctorId(doctor.getDoctorId());
         notificationDTO.setMessage(message);
         notificationDTO.setRead(false);
+        notificationDTO.setRecipientType("DOCTOR");
 
         String messageForPatient = "Cuộc hẹn có mã là " + appointment.getAppointmentId()
                 +  " với bác sĩ " + doctor.getFullName()
@@ -115,8 +125,9 @@ public class AppointmentServiceImpl implements AppointmentService {
         NotificationDTO notificationForPatient = new NotificationDTO();
 
         notificationForPatient.setUserId(patient.getUserId());
-        notificationForPatient.setMessage(message);
+        notificationForPatient.setMessage(messageForPatient);
         notificationForPatient.setRead(false);
+        notificationForPatient.setRecipientType("PATIENT");
 
         notificationService.createDoctorNotification(notificationDTO);
         notificationService.createUserNotification(notificationForPatient);
@@ -142,11 +153,25 @@ public class AppointmentServiceImpl implements AppointmentService {
     public AppointmentDTO updateAppointment(AppointmentDTO dto) {
         AppointmentEntity appointment = appointmentRepository.findById(dto.getAppointmentId()).get();
 
+        UserEntity patient = appointment.getUser();
+        DoctorEntity doctor = appointment.getDoctor();
+
         appointment.setAppointmentTime(dto.getAppointmentTime());
         appointment.setStatus(dto.getStatus());
         appointment.setDoctorNotes(dto.getDoctorNotes());
 
+        String messageForPatient = "Cuộc hẹn có mã là " + appointment.getAppointmentId()
+                +  " với bác sĩ " + doctor.getFullName()
+                + " vào khoảng thời gian " + appointment.getAppointmentTime()
+                + " đã thay đổi, bệnh nhân chú ý theo dõi thông báo để cập nhật thông tin kịp thời";
+        NotificationDTO notificationForPatient = new NotificationDTO();
 
+        notificationForPatient.setUserId(patient.getUserId());
+        notificationForPatient.setMessage(messageForPatient);
+        notificationForPatient.setRead(false);
+        notificationForPatient.setRecipientType("PATIENT");
+
+        notificationService.createUserNotification(notificationForPatient);
         return appointmentConverter.convertToDto(appointmentRepository.save(appointment));
     }
 }
